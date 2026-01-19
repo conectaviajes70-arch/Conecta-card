@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Conecta Go</title>
+
+<style>
+body {
+  margin: 0;
+  background: transparent;
+}
+
+.conecta-card {
+  background: linear-gradient(180deg, #0a1020, #050914);
+  border-radius: 22px;
+  padding: 18px;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+}
+
+.conecta-tag {
+  background: linear-gradient(135deg, #00e5ff, #00b0ff);
+  color: #002b36;
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.origin, .destination {
+  color: #64d8ff;
+  font-size: 15px;
+  margin-top: 6px;
+}
+
+.details {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.price {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 34px;
+  font-weight: 800;
+  color: #00e5ff;
+}
+</style>
+</head>
+
+<body>
+
+<div id="conecta">Cargando viaje...</div>
+
+<script>
+fetch("PEGA_AQUI_TU_URL_DE_APPS_SCRIPT")
+  .then(res => res.json())
+  .then(data => {
+
+    const v = data[0];
+
+    document.getElementById("conecta").innerHTML = `
+      <div class="conecta-card">
+
+        <div class="conecta-tag">Conecta Go</div>
+
+        <div class="origin">📍 ${v.origen}</div>
+        <div class="destination">🏁 ${v.destino}</div>
+
+        <div class="details">
+          <div>${v.distancia_km} km</div>
+          <div>${v.tiempoEstimadominutos} min</div>
+        </div>
+
+        <div class="price">$ ${v.tarifaEstimada43}</div>
+
+      </div>
+    `;
+  });
+</script>
+
+</body>
+</html>
