@@ -55,7 +55,10 @@ body {
 
 <body>
 
-<div id="conecta">Cargando viaje...</div>
+<div class="app">
+  <div id="conecta">Cargando viaje...</div>
+</div>
+
 
 <script>
 fetch("https://script.google.com/macros/s/AKfycbwY5nksm7tUY4o50TAwYjL-y0z6d0lBl19KKWpdNG-2meTLaG8kEsX4s7Ut-x6GOyVP/exec")
@@ -84,6 +87,23 @@ fetch("https://script.google.com/macros/s/AKfycbwY5nksm7tUY4o50TAwYjL-y0z6d0lBl1
   });
 </script>
 
-</body>
+body {
+  margin: 0;
+  background: #f2f4f7;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+}
+
+.app {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.conecta-card {
+  width: 100%;
+  max-width: 380px; /* tamaño tipo app real */
+  border-radius: 18px;
+}
+
 </html>
 
