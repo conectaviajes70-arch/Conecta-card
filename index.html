@@ -100,7 +100,23 @@ body {
 
 <div id="conecta" class="loading">Cargando viaje...</div>
 
-<script>
+<script>const params = new URLSearchParams(window.location.search);
+const idViaje = params.get("id_viaje");
+
+fetch("https://script.google.com/macros/s/AKfycbyA7kn6BHrvAdrxjzWwTwpd1mIjiRUup4TP_ZKvvlmuHKrv0SZ6ZryHBpdjtR5wuIaT/exec`)
+  .then(res => res.json())
+  .then(data => {
+    if (data.error) {
+      console.error(data.error);
+      return;
+    }
+
+    document.getElementById("km").textContent = data.km;
+    document.getElementById("precio").textContent = data.total;
+    document.getElementById("origen").textContent = data.origen;
+    document.getElementById("destino").textContent = data.destino;
+  });
+
 fetch("https://script.google.com/macros/s/AKfycbyA7kn6BHrvAdrxjzWwTwpd1mIjiRUup4TP_ZKvvlmuHKrv0SZ6ZryHBpdjtR5wuIaT/exec")
 .then(res => res.json())
 .then(data => {
