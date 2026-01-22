@@ -1,178 +1,53 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conecta Go</title>
 
-<style>
-* {
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: #0b1220;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.card {
-  width: 100%;
-  max-width: 420px;
-  background: linear-gradient(180deg, #0e1627, #040812);
-  color: #eaf6ff;
-  border-radius: 24px;
-  padding: 22px;
-  box-shadow: 0 20px 45px rgba(0,0,0,.45);
-}
-
-.tag {
-  display: inline-block;
-  background: #00e5ff;
-  color: #001018;
-  font-weight: 700;
-  padding: 8px 18px;
-  border-radius: 999px;
-  margin-bottom: 16px;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.label {
-  color: #9fb3c8;
-  font-size: 13px;
-}
-
-.value {
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.icon {
-  margin-right: 6px;
-}
-
-.block {
-  margin-bottom: 10px;
-  font-size: 15px;
-}
-
-.meta {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 14px;
-  font-size: 14px;
-  color: #b6c3d1;
-}
-
-.price-box {
-  margin-top: 24px;
-  text-align: center;
-}
-
-.price-symbol {
-  font-size: 36px;
-  color: #00e5ff;
-  margin-bottom: 4px;
-}
-
-.price {
-  font-size: 44px;
-  font-weight: 800;
-  color: #00e5ff;
-}
-
-.loading {
-  color: #9fb3c8;
-}
-</style>
-</head>
-
-<body>
-
-<div id="conecta" class="loading">Cargando viaje...</div>
-
-<script>const params = new URLSearchParams(window.location.search);
+<script>
+const params = new URLSearchParams(window.location.search);
 const idViaje = params.get("id_viaje");
 
-fetch("https://script.google.com/macros/s/AKfycbyA7kn6BHrvAdrxjzWwTwpd1mIjiRUup4TP_ZKvvlmuHKrv0SZ6ZryHBpdjtR5wuIaT/exec`)
+if (!idViaje) {
+  document.getElementById("conecta").innerHTML = "❌ id_viaje no recibido";
+  throw new Error("id_viaje faltante");
+}
+
+fetch(`https://script.google.com/macros/s/AKfycbyA7kn6BHrvAdrxjzWwTwpd1mIjiRUup4TP_ZKvvlmuHKrv0SZ6ZryHBpdjtR5wuIaT/exec?id_viaje=${idViaje}`)
   .then(res => res.json())
-  .then(data => {
-    if (data.error) {
-      console.error(data.error);
+  .then(v => {
+
+    if (v.error) {
+      document.getElementById("conecta").innerHTML = v.error;
       return;
     }
 
-    document.getElementById("km").textContent = data.km;
-    document.getElementById("precio").textContent = data.total;
-    document.getElementById("origen").textContent = data.origen;
-    document.getElementById("destino").textContent = data.destino;
+    document.getElementById("conecta").innerHTML = `
+      <div class="card">
+
+        <div class="tag">Conecta Go</div>
+
+        <div class="row">
+          <div class="label">⭐ ${v.calificacion_usuario ?? "--"}</div>
+          <div class="label">Viajes: ${v.record_viajes_usuario ?? "--"}</div>
+        </div>
+
+        <div class="block">📍 ${v.origen || "Origen no definido"}</div>
+        <div class="block">🏁 ${v.destino || "Destino no definido"}</div>
+        <div class="block">🕒 ${v.paraCuando || "--"}</div>
+        <div class="block">📝 ${v.escribaUna39 || ""}</div>
+        <div class="block">📝 ${v.escribaUna38 || ""}</div>
+
+        <div class="meta">
+          <div>${v.distancia_km ?? "--"} km</div>
+          <div>${v.tiempoEstimado_minutos ?? "--"} min</div>
+        </div>
+
+        <div class="price-box">
+          <div class="price-symbol">$</div>
+          <div class="price">${v.tarifaEstimada43 ?? "--"}</div>
+        </div>
+
+      </div>
+    `;
+  })
+  .catch(err => {
+    document.getElementById("conecta").innerHTML = "❌ Error al cargar viaje";
+    console.error(err);
   });
-
-fetch("https://script.google.com/macros/s/AKfycbyA7kn6BHrvAdrxjzWwTwpd1mIjiRUup4TP_ZKvvlmuHKrv0SZ6ZryHBpdjtR5wuIaT/exec")
-.then(res => res.json())
-.then(data => {
-
-  const v = data[0] || {};
-
-  document.getElementById("conecta").innerHTML = `
-    <div class="card">
-
-      <div class="tag">Conecta Go</div>
-
-      <div class="row">
-        <div class="label">⭐ ${v.calificacion_usuario ?? "--"}</div>
-        <div class="label">Viajes: ${v.record_viajes_usuario ?? "--"}</div>
-      </div>
-
-      <div class="block">
-        📍 ${v.origen || "Origen no definido"}
-      </div>
-
-      <div class="block">
-        🏁 ${v.destino || "Destino no definido"}
-      </div>
-
-      <div class="block">
-        🕒 ${v.paraCuando || "--"}
-      </div>
-
-      <div class="block">
-        📝 ${v.escribaUna39 || ""}
-      </div>
-
-      <div class="block">
-        📝 ${v.escribaUna38 || ""}
-      </div>
-
-      <div class="meta">
-        <div>${v.distancia_km ?? "--"} km</div>
-        <div>${v.tiempoEstimado_minutos ?? "--"} min</div>
-      </div>
-
-      <div class="price-box">
-        <div class="price-symbol">$</div>
-        <div class="price">${v.TarifaEstimada43 ?? "--"}</div>
-      </div>
-
-    </div>
-  `;
-})
-.catch(err => {
-  document.getElementById("conecta").innerHTML = "Error al cargar el viaje";
-  console.error(err);
-});
 </script>
-
-</body>
-</html>
-
-
